@@ -2,14 +2,15 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
 
-import { AppRoutingModule } from './app-routing.module';
+import { AppRoutingModule, routingComponents } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { FridgesComponent } from './pages/fridges/fridges.component';
+// import { FridgesComponent } from './pages/fridges/fridges.component';
+// import { FridgeSensordataComponent } from './pages/fridge-sensordata/fridge-sensordata.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    FridgesComponent
+    routingComponents
   ],
   imports: [
     BrowserModule,
