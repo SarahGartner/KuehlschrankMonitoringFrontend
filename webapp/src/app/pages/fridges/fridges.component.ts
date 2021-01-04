@@ -21,11 +21,11 @@ export class FridgesComponent implements OnInit {
               configured: data[key]['name'] == "" || data[key]['name'] == null || typeof data[key]['name'] === 'undefined' ? false : true,
               open: false,
               mac: data[key]['_id'],
-              fridgeId: data[key] != null && typeof data[key]['fridegeId'] !== 'undefined' ? data[key]['fridgeId'] : "",
+              fridgeId: data[key] != null && typeof data[key]['fridgeId'] !== 'undefined' ? data[key]['fridgeId'] : "",
               minTemp: data[key] != null && typeof data[key]['minTemperature'] !== 'undefined' ? data[key]['minTemperature']['$numberDecimal'] : "",
               maxTemp: data[key] != null && typeof data[key]['maxTemperature'] !== 'undefined' ? data[key]['maxTemperature']['$numberDecimal'] : "",
-              minHum: data[key] != null && typeof data[key]['minHumidity'] !== 'undefined' ? data[key]['minHumidity']['$numberDecimal'] : null,
-              maxHum: data[key] != null && typeof data[key]['maxHumidity'] !== 'undefined' ?['maxHumidity']['$numberDecimal'] : null
+              minHum: data[key] != null && typeof data[key]['minHumidity'] !== 'undefined' ? data[key]['minHumidity']['$numberDecimal'] : "",
+              maxHum: data[key] != null && typeof data[key]['maxHumidity'] !== 'undefined' ? data[key]['maxHumidity']['$numberDecimal'] : ""
             }
             this.fridgeNames.push(fridge);
           } catch (err) {
