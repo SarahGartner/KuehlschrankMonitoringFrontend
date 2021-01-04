@@ -8,26 +8,29 @@ import { HttpClient } from '@angular/common/http';
   styleUrls: ['./fridges.component.scss']
 })
 export class FridgesComponent implements OnInit {
-
-  // title = 'webapp';
   url = `https://kuehlschrankmonitoringapi.azurewebsites.net/`;
-  items = [];
-  fridges = [];
-  configured = [];
+  fridgeNames = [];
   userId = { userId: 3 };
   constructor(private http: HttpClient) {
     this.http.post(this.url + 'fridges/ByUser', this.userId).toPromise().then(data => {
       console.log(data);
       for (let key in data)
-        if (data.hasOwnProperty(key))
-          if (data[key]['name'] != null) {
-            this.fridges.push([data[key]['name'], true]);
-            // this.fridges.push([data[key]['_id'] + ": " + data[key]['name'], true]);
+        if (data.hasOwnProperty(key)) {
+          const fridge = {
+            name: data[key]['name'],
+            configured: data[key]['name'] != null ? true : false,
+            open: false,
+            mac: data[key]['_id'],
+            fridgeId: data[key]['fridgeId'],
+            minTemp: data[key]['minTemperature']['$numberDecimal'],
+            maxTemp: data[key]['maxTemperature']['$numberDecimal'],
+            minHum: data[key]['minHumidity']['$numberDecimal'],
+            maxHum: data[key]['maxHumidity']['$numberDecimal']
           }
-          else {
-            this.fridges.push([data[key]['_id'] + ": Kühlschrank wurde noch nicht definiert", false]);
-          }
+          this.fridgeNames.push(fridge);
+        }
     })
+    console.log(this.fridgeNames);
   }
 
   ngOnInit() {

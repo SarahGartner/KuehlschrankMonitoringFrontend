@@ -52,6 +52,12 @@
   border-radius: 5px;
 }
 
+.extra{
+  padding: 1px 10px 20px 10px;
+  background-color: $lightgrey;
+  text-align: right;
+}
+
 .configured{
   // max-width: 50%;
 }
@@ -64,6 +70,10 @@
 .buttons{
   margin-left: auto;
   min-width: max-content;
+}
+
+.inputs{
+  padding-bottom: 20px;
 }
 
 .fridgeButton {
@@ -84,16 +94,29 @@
   }
 }
 
+.fridgeButton-abbrechen {
+  background: grey;
+  box-shadow: 0 3px #666666;
+  cursor: pointer;
+  border: none;
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+  padding: 10px 15px;
+  border-radius: 5px;
+  margin-left: 10px;
+
+  &:hover{
+    background: #666666;
+    transform: scale(0.97);
+  }
+
+  &:active {
+    transform: scale(0.9);
+  }
+}
+
 @media (max-width:600px) {
   .fridgeList-item{
     display:block;
-  }
-
-  .buttons{
-    display: flex;
-    flex-direction: column;
-    width: min-content;
-    margin-left: 0px;
   }
 
   .fridgeButton{
@@ -104,6 +127,15 @@
     height: 100%;
     width: 100%;
     margin: 0px;
+  }
+}
+
+@media (max-width:300px){
+  .buttons{
+    display: flex;
+    flex-direction: column;
+    width: min-content;
+    margin-left: 0px;
   }
 }
 

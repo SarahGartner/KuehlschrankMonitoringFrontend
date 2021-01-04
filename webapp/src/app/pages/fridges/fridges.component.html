@@ -7,16 +7,29 @@
       </div>
       <div class="sidebar">
         <div class="fridgesList">
-          <div *ngFor="let item of fridges" class="fridgeList-item">
-            <div *ngIf="item[1]">
-              <div class="configured">{{item[0]}}</div>
+          <div *ngFor="let item of fridgeNames" class="general">
+            <div class="fridgeList-item">
+              <div [ngClass]="item['configured'] ? 'configured' : 'unconfigured'">
+                {{item['name'] != null ? item['name'] : item['mac'] + ": Kühlschrank wurde noch nicht definiert"}}
+              </div>
+              <div class="buttons">
+                <button class="fridgeButton" *ngIf="item['name']"> Sensordaten </button>
+                <button (click)="item['open'] = !item['open']" class="fridgeButton"> {{!item['open'] ? "Konfigurieren" :
+                  "Schließen" }} </button>
+              </div>
             </div>
-            <div *ngIf="!item[1]">
-              <div class="unconfigured">{{item[0]}}</div>
-            </div>
-            <div class="buttons">
-              <button class="fridgeButton" *ngIf="item[1]"> Sensordaten </button>
-              <button class="fridgeButton"> Konfigurieren </button>
+            <div *ngIf="item['open']" class="extra">
+              <div class="inputs">
+                <div> Mac-Adresse: <input type="text" readonly value="{{item['mac']}}"> </div>
+                <div> Name: <input type="text" value="{{item['name']}}"> </div>
+                <div> Kühlgerät-Id: <input type="text" value="{{item['fridgeId']}}"> </div>
+                <div> Mindest Temperatur: <input type="number" value="{{item['minTemp']}}"> </div>
+                <div> Maximal Temperatur: <input type="number" value="{{item['maxTemp']}}"> </div>
+                <div> Mindest Luftfeuchtigkeit: <input type="number" value="{{item['minHum']}}"> </div>
+                <div> Maximal Luftfeuchtigkeit: <input type="number" value="{{item['maxHum']}}"> </div>
+              </div>
+              <button class="fridgeButton-abbrechen"> Abbrechen </button>
+              <button class="fridgeButton"> Kühlgerät Speichern </button>
             </div>
           </div>
         </div>

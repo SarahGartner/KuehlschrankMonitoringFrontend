@@ -4,8 +4,6 @@ import { HttpClientModule } from '@angular/common/http';
 
 import { AppRoutingModule, routingComponents } from './app-routing.module';
 import { AppComponent } from './app.component';
-// import { FridgesComponent } from './pages/fridges/fridges.component';
-// import { FridgeSensordataComponent } from './pages/fridge-sensordata/fridge-sensordata.component';
 
 @NgModule({
   declarations: [
