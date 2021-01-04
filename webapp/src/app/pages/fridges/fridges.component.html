@@ -10,7 +10,7 @@
           <div *ngFor="let item of fridgeNames" class="general">
             <div class="fridgeList-item">
               <div [ngClass]="item['configured'] ? 'configured' : 'unconfigured'">
-                {{item['name'] != null ? item['name'] : item['mac'] + ": Kühlschrank wurde noch nicht definiert"}}
+                {{item['name'] != "" ? item['name'] : item['mac'] + ": Kühlschrank wurde noch nicht definiert"}}
               </div>
               <div class="buttons">
                 <!-- <button class="fridgeButton" *ngIf="item['name']"> Sensordaten </button> -->
