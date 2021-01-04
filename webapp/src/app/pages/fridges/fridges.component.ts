@@ -13,7 +13,6 @@ export class FridgesComponent implements OnInit {
   userId = { userId: 3 };
   constructor(private http: HttpClient) {
     this.http.post(this.url + 'fridges/ByUser', this.userId).toPromise().then(data => {
-      console.log(data);
       for (let key in data)
         if (data.hasOwnProperty(key)) {
           const fridge = {

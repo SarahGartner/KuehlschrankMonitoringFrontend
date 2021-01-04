@@ -58,13 +58,8 @@
   text-align: right;
 }
 
-.configured{
-  // max-width: 50%;
-}
-
 .unconfigured{
   color: red;
-  // max-width: 60%;
 }
 
 .buttons{
@@ -114,6 +109,26 @@
   }
 }
 
+.fridgeButton-red {
+  background: red;
+  box-shadow: 0 3px #b10000;
+  cursor: pointer;
+  border: none;
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+  padding: 10px 15px;
+  border-radius: 5px;
+  margin-left: 10px;
+
+  &:hover{
+    background: #B10000;
+    transform: scale(0.97);
+  }
+
+  &:active {
+    transform: scale(0.9);
+  }
+}
+
 @media (max-width:600px) {
   .fridgeList-item{
     display:block;
@@ -127,6 +142,10 @@
     height: 100%;
     width: 100%;
     margin: 0px;
+  }
+
+  .sidebar{
+    width: 100%;
   }
 }
 

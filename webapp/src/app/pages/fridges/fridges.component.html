@@ -13,8 +13,9 @@
                 {{item['name'] != null ? item['name'] : item['mac'] + ": Kühlschrank wurde noch nicht definiert"}}
               </div>
               <div class="buttons">
-                <button class="fridgeButton" *ngIf="item['name']"> Sensordaten </button>
-                <button (click)="item['open'] = !item['open']" class="fridgeButton"> {{!item['open'] ? "Konfigurieren" :
+                <!-- <button class="fridgeButton" *ngIf="item['name']"> Sensordaten </button> -->
+                <button class="fridgeButton"> Sensordaten </button>
+                <button [ngClass]="item['configured'] || item['open'] ? 'fridgeButton' : 'fridgeButton-red'" (click)="item['open'] = !item['open']"> {{!item['open'] ? "Konfigurieren" :
                   "Schließen" }} </button>
               </div>
             </div>
@@ -28,8 +29,8 @@
                 <div> Mindest Luftfeuchtigkeit: <input type="number" value="{{item['minHum']}}"> </div>
                 <div> Maximal Luftfeuchtigkeit: <input type="number" value="{{item['maxHum']}}"> </div>
               </div>
-              <button class="fridgeButton-abbrechen"> Abbrechen </button>
-              <button class="fridgeButton"> Kühlgerät Speichern </button>
+              <button (click)="item['open'] = false" class="fridgeButton-abbrechen"> Abbrechen </button>
+              <button (click)="item['open'] = false" class="fridgeButton"> Kühlgerät Speichern </button>
             </div>
           </div>
         </div>
