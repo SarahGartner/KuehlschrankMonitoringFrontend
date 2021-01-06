@@ -56,19 +56,18 @@ export class FridgesComponent implements OnInit {
     maxHum != "" && (this.fridgeNames[item].maxHum = maxHum);
     const kuehlschrank = {
       _id: this.fridgeNames[item]['mac'],
-      name: name,
-      fridgeId: fridgeId,
-      minTemperature: minTemp,
-      maxTemperature: maxTemp,
-      minHumidity: minHum,
-      maxHumidity: maxHum,
+      name: this.fridgeNames[item].name,
+      fridgeId: this.fridgeNames[item].fridgeId,
+      minTemperature: this.fridgeNames[item].minTemp,
+      maxTemperature: this.fridgeNames[item].maxTemp,
+      minHumidity: this.fridgeNames[item].minHum,
+      maxHumidity: this.fridgeNames[item].maxHum,
     }
     try{
     this.http.post(this.url + 'fridges/Update', kuehlschrank).toPromise().then(data => {
-      console.log(data);
     });
   } catch (err){
-    console.log(err);
+    alert("Kühlschrank konnte nicht upgedated werden");
   }
   }
 }
