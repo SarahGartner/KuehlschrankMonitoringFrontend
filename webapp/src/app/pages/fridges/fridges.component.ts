@@ -30,12 +30,12 @@ export class FridgesComponent implements OnInit {
     this.subscription = source.subscribe(val => this.getData());
     var input = document.getElementById("selectUser");
 
-    input.addEventListener("keyup", function(event) {
-    if (event.keyCode === 13) {
-      event.preventDefault();
-      document.getElementById("okButton").click();
-    }
-  });
+    input.addEventListener("keyup", function (event) {
+      if (event.keyCode === 13) {
+        event.preventDefault();
+        document.getElementById("okButton").click();
+      }
+    });
   }
 
   setUser() {
@@ -152,5 +152,20 @@ export class FridgesComponent implements OnInit {
     })
     this.sensordata.push(fridgesensordata);
     // console.log(this.sensordata);
+  }
+
+  deleteFridge(macAdresse) {
+    var conf = confirm("Kühlgerät wirklich löschen? Du kannst denSchritt nicht rückgängig machen.");
+    if (conf) {
+      try {
+        const mac = { _id: macAdresse };
+        this.http.post(this.url + 'fridges/DeleteById', mac).toPromise().then(data => {
+          console.log(data); +
+            this.setUser();
+        });
+      } catch (err) {
+        alert("Fehler: Datenbank konnte nicht erreicht werden");
+      }
+    }
   }
 }

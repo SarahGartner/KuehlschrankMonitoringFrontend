@@ -6,10 +6,10 @@
     {{user}}
   </option>
 </select> -->
-  <div>
-    <p>Gib deinen User-Id ein, um auf deine Kühlgeräte zugreifen zu können!</p>
+  <div class="userLogin">
+    <p *ngIf="user == ''">Gib deinen User-Id ein, um auf deine Kühlgeräte zugreifen zu können!</p>
     <input type="text" value="" id="selectUser">
-    <button id="okButton" (click)="setUser()"> Ok </button>
+    <button id="okButton" class="fridgeButton" (click)="setUser()"> Einloggen </button>
   </div>
   <div *ngIf="user != ''" class="container">
     <div class="fridges">
@@ -20,7 +20,7 @@
         <div class="fridgesList">
           <div class="alert" *ngIf="bot == false">
             <p>Achtung! Du hast den <a href="https://web.telegram.org/#/im?p=@KuehlschrankMonitoringBot" target="_blank">Kühlmonitoring Telegram Bot</a> noch nicht abonniert!</p>
-            <p>Folge diesem <a href="#">Link</a>, um eine Erklärung zu finden. </p>
+            <p><a routerLink="/info">Hier</a> findest du eine genaue Erklärung dazu! </p>
           </div>
           <div *ngFor="let item of fridgeNames" class="general">
             <div class="fridgeList-item">
@@ -55,6 +55,7 @@
                     id="{{fridgeNames.indexOf(item)}}.minHum"> </div>
                 <div> Maximal Luftfeuchtigkeit: <input type="number" value="{{item['maxHum']}}"
                     id="{{fridgeNames.indexOf(item)}}.maxHum"> </div>
+                    <button (click)="deleteFridge(item['mac'])" class="fridgeButton" >Kühlgerät löschen</button>
               </div>
               <button (click)="item['openConfig'] = false;" class="fridgeButton-abbrechen"> Abbrechen </button>
               <button (click)="item['openConfig'] = false; fridgeUpdate(fridgeNames.indexOf(item))"
