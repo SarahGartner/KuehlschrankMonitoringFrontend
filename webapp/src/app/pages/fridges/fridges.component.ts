@@ -26,8 +26,8 @@ export class FridgesComponent implements OnInit {
 
 
   ngOnInit() {
-    // const source = interval(20000);
-    // this.subscription = source.subscribe(val => this.getData());
+    const source = interval(20000);
+    this.subscription = source.subscribe(val => this.getData());
 
     var input = document.getElementById("selectUser");
     input.addEventListener("keyup", function (event) {
@@ -75,7 +75,6 @@ export class FridgesComponent implements OnInit {
                     }
                     this.fridgeNames.push(fridge);
                   } catch (err) {
-                    console.log(err);
                   }
                 }
             })
@@ -88,7 +87,6 @@ export class FridgesComponent implements OnInit {
   }
 
   fridgeUpdate(item) {
-    console.log("update");
     const name = (<HTMLInputElement>document.getElementById(item + '.name')).value;
     const fridgeId = (<HTMLInputElement>document.getElementById(item + '.fridgeId')).value;
     const minTemp = (<HTMLInputElement>document.getElementById(item + '.minTemp')).value;
@@ -112,7 +110,8 @@ export class FridgesComponent implements OnInit {
     }
     try {
       this.http.post(this.url + 'fridges/Update', kuehlschrank).toPromise().then(data => {
-        console.log(data);
+        alert("Kühlschrank bearbeitet");
+        this.setUser();
       });
     } catch (err) {
       alert("Fehler: Kühlschrank konnte nicht upgedated werden");
@@ -123,7 +122,6 @@ export class FridgesComponent implements OnInit {
     this.fridgeNames[item].openData = !this.fridgeNames[item].openData;
     this.fridgeNames[item].openConfig = false;
     this.getData();
-    console.log(this.sensordata);
   }
 
   getData() {
@@ -135,22 +133,21 @@ export class FridgesComponent implements OnInit {
           var fridgesensordata = [];
           for (let key in data) {
             if (data.hasOwnProperty(key)) {
+              var time = (data[key]['_id']['timestamp']).substring(0, 10) + " " + (data[key]['_id']['timestamp']).substring(11, 19);
               const singleSensordata = {
-                mac: data[key]['_id']['sensorMac'],
-                timestamp: data[key]['_id']['timestamp'],
-                temp: data[key]['temperature'],
-                hum: data[key]['humidity']
+                timestamp: time,
+                temp: data[key]['temperature']['$numberDecimal'],
+                hum: data[key]['humidity']['$numberDecimal']
               }
               fridgesensordata.push(singleSensordata);
             }
           }
-          this.sensordata.push(JSON.stringify(fridgesensordata));
+          this.sensordata.push(JSON.parse(JSON.stringify(fridgesensordata)));
         });
       } catch (err) {
         alert("Fehler: Datenbank konnte nicht erreicht werden");
       }
     })
-    console.log(this.sensordata);
   }
 
   deleteFridge(macAdresse) {
@@ -159,8 +156,8 @@ export class FridgesComponent implements OnInit {
       try {
         const mac = { _id: macAdresse };
         this.http.post(this.url + 'fridges/DeleteById', mac).toPromise().then(data => {
-          console.log(data); +
-            this.setUser();
+          alert("Kühlschrank gelöscht");
+          this.setUser();
         });
       } catch (err) {
         alert("Fehler: Datenbank konnte nicht erreicht werden");

@@ -38,7 +38,12 @@
               </div>
             </div>
             <div *ngIf="item['openData']" class="extra">
-              {{sensordata[fridgeNames.indexOf(item)]}}
+              <div *ngFor="let data of sensordata[fridgeNames.indexOf(item)]">
+                <!-- <div [ngClass]="item['minTemp'] < data['temp'] ? 'sensordataNormal' : 'sensordataAbnormal'"> -->
+                  {{data['timestamp']}}: {{data['temp']}}C° {{data['hum']}}%
+                <!-- </div> -->
+              </div>
+              <!-- {{sensordata[fridgeNames.indexOf(item)]}} -->
             </div>
             <div *ngIf="item['openConfig']" class="extra">
               <div class="inputs">
