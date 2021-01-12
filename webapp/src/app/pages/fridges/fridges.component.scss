@@ -3,8 +3,8 @@
 .container{
   display: flex;
   justify-content: center;
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  height: 100%;
 }
 
 .fridges{
@@ -50,6 +50,13 @@
   align-items: center;
   padding: 10px 15px;
   border-radius: 5px;
+}
+
+.alert{
+  // color: red;
+  text-align: center;
+  margin-top: 10px;
+  margin-bottom: 15px;
 }
 
 .extra{

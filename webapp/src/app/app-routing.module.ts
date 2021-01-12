@@ -4,7 +4,7 @@ import { FridgesComponent } from './pages/fridges/fridges.component';
 import { FridgeSensordataComponent } from './pages/fridge-sensordata/fridge-sensordata.component';
 
 const routes: Routes = [
-  { path: 'fridges', component: FridgesComponent },
+  { path: '', component: FridgesComponent },
   { path: 'sensordata', component: FridgeSensordataComponent }
 ];
 

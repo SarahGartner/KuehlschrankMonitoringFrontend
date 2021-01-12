@@ -1,35 +1,64 @@
 <div class="centered-content">
-  <p>Eingeloggt als User: {{userId.userId}}</p>
-  <div class="container">
+  <!-- <p>Eingeloggt als User: {{userId.userId}}</p> -->
+  <!-- <select id="selectUser" (change)="this.setUser()">
+  <option value="-"> User auswählen </option>
+  <option *ngFor="let user of users" [value]="user">
+    {{user}}
+  </option>
+</select> -->
+  <div>
+    <p>Gib deinen User-Id ein, um auf deine Kühlgeräte zugreifen zu können!</p>
+    <input type="text" value="" id="selectUser">
+    <button id="okButton" (click)="setUser()"> Ok </button>
+  </div>
+  <div *ngIf="user != ''" class="container">
     <div class="fridges">
       <div class="topbar">
         <h1 class="title"> Kühlgeräte </h1>
       </div>
       <div class="sidebar">
         <div class="fridgesList">
+          <div class="alert" *ngIf="bot == false">
+            <p>Achtung! Du hast den <a href="https://web.telegram.org/#/im?p=@KuehlschrankMonitoringBot" target="_blank">Kühlmonitoring Telegram Bot</a> noch nicht abonniert!</p>
+            <p>Folge diesem <a href="#">Link</a>, um eine Erklärung zu finden. </p>
+          </div>
           <div *ngFor="let item of fridgeNames" class="general">
             <div class="fridgeList-item">
-              <div [ngClass]="item['configured'] ? 'configured' : 'unconfigured'">
+              <div [ngClass]="item['configured'] && item['ok']  ? 'configured' : 'unconfigured'">
                 {{item['name'] != "" ? item['name'] : item['mac'] + ": Kühlschrank wurde noch nicht definiert"}}
               </div>
               <div class="buttons">
-                <button class="fridgeButton"> Sensordaten </button>
-                <button [ngClass]="item['configured'] || item['open'] ? 'fridgeButton' : 'fridgeButton-red'" (click)="item['open'] = !item['open']"> {{!item['open'] ? "Konfigurieren" :
+                <button class="fridgeButton" (click)="showData(fridgeNames.indexOf(item),item['mac'])">
+                  {{!item['openData'] ? "Sensordaten" :
+                  "Schließen" }} </button>
+                <button [ngClass]="item['configured'] || item['openConfig'] ? 'fridgeButton' : 'fridgeButton-red'"
+                  (click)="item['openConfig'] = !item['openConfig']; item['openData'] = false"> {{!item['openConfig'] ?
+                  "Konfigurieren" :
                   "Schließen" }} </button>
               </div>
             </div>
-            <div *ngIf="item['open']" class="extra">
+            <div *ngIf="item['openData']" class="extra">
+              DATA
+              {{sensordata}}
+            </div>
+            <div *ngIf="item['openConfig']" class="extra">
               <div class="inputs">
                 <div> Mac-Adresse: {{item['mac']}} </div>
                 <div> Name: <input type="text" value="{{item['name']}}" id="{{fridgeNames.indexOf(item)}}.name"> </div>
-                <div> Kühlgerät-Id: <input type="text" value="{{item['fridgeId']}}" id="{{fridgeNames.indexOf(item)}}.fridgeId"> </div>
-                <div> Mindest Temperatur: <input type="number" value="{{item['minTemp']}}" id="{{fridgeNames.indexOf(item)}}.minTemp"> </div>
-                <div> Maximal Temperatur: <input type="number" value="{{item['maxTemp']}}" id="{{fridgeNames.indexOf(item)}}.maxTemp"> </div>
-                <div> Mindest Luftfeuchtigkeit: <input type="number" value="{{item['minHum']}}" id="{{fridgeNames.indexOf(item)}}.minHum"> </div>
-                <div> Maximal Luftfeuchtigkeit: <input type="number" value="{{item['maxHum']}}" id="{{fridgeNames.indexOf(item)}}.maxHum"> </div>
+                <div> Kühlgerät-Id: <input type="text" value="{{item['fridgeId']}}"
+                    id="{{fridgeNames.indexOf(item)}}.fridgeId"> </div>
+                <div> Mindest Temperatur: <input type="number" value="{{item['minTemp']}}"
+                    id="{{fridgeNames.indexOf(item)}}.minTemp"> </div>
+                <div> Maximal Temperatur: <input type="number" value="{{item['maxTemp']}}"
+                    id="{{fridgeNames.indexOf(item)}}.maxTemp"> </div>
+                <div> Mindest Luftfeuchtigkeit: <input type="number" value="{{item['minHum']}}"
+                    id="{{fridgeNames.indexOf(item)}}.minHum"> </div>
+                <div> Maximal Luftfeuchtigkeit: <input type="number" value="{{item['maxHum']}}"
+                    id="{{fridgeNames.indexOf(item)}}.maxHum"> </div>
               </div>
-              <button (click)="item['open'] = false;" class="fridgeButton-abbrechen"> Abbrechen </button>
-              <button (click)="item['open'] = false; fridgeUpdate(fridgeNames.indexOf(item))" class="fridgeButton"> Kühlgerät Speichern </button>
+              <button (click)="item['openConfig'] = false;" class="fridgeButton-abbrechen"> Abbrechen </button>
+              <button (click)="item['openConfig'] = false; fridgeUpdate(fridgeNames.indexOf(item))"
+                class="fridgeButton"> Kühlgerät Speichern </button>
             </div>
           </div>
         </div>
