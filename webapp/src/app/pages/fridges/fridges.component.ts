@@ -26,10 +26,10 @@ export class FridgesComponent implements OnInit {
 
 
   ngOnInit() {
-    const source = interval(20000);
-    this.subscription = source.subscribe(val => this.getData());
-    var input = document.getElementById("selectUser");
+    // const source = interval(20000);
+    // this.subscription = source.subscribe(val => this.getData());
 
+    var input = document.getElementById("selectUser");
     input.addEventListener("keyup", function (event) {
       if (event.keyCode === 13) {
         event.preventDefault();
@@ -55,7 +55,6 @@ export class FridgesComponent implements OnInit {
           if (data.hasOwnProperty(key)) {
             if (data[key]['telegramId'] != 0) this.bot = true;
             else this.bot = false;
-            console.log(this.bot);
             this.http.post(this.url + 'fridges/ByUser', userId).toPromise().then(data => {
               for (let key in data)
                 if (data.hasOwnProperty(key)) {
@@ -66,7 +65,8 @@ export class FridgesComponent implements OnInit {
                       openConfig: false,
                       openData: false,
                       mac: data[key]['_id'],
-                      ok: data[key]['tempOK'],
+                      tempOk: data[key]['tempOK'],
+                      humOk: data[key]['humOK'],
                       fridgeId: data[key] != null && typeof data[key]['fridgeId'] !== 'undefined' ? data[key]['fridgeId'] : "",
                       minTemp: data[key] != null && typeof data[key]['minTemperature'] !== 'undefined' ? data[key]['minTemperature']['$numberDecimal'] : 0,
                       maxTemp: data[key] != null && typeof data[key]['maxTemperature'] !== 'undefined' ? data[key]['maxTemperature']['$numberDecimal'] : 0,
@@ -119,24 +119,24 @@ export class FridgesComponent implements OnInit {
     }
   }
 
-  showData(item, mac) {
+  showData(item) {
     this.fridgeNames[item].openData = !this.fridgeNames[item].openData;
     this.fridgeNames[item].openConfig = false;
-    console.log(this.sensordata[item]);
+    this.getData();
+    console.log(this.sensordata);
   }
 
   getData() {
     this.sensordata = [];
-    const fridgesensordata = [];
     this.fridgeNames.forEach(e => {
       try {
         const mac = { sensorMac: e.mac };
         this.http.post(this.url + 'sensordata/ByMac', mac).toPromise().then(data => {
-          // console.log(data);
+          var fridgesensordata = [];
           for (let key in data) {
             if (data.hasOwnProperty(key)) {
-              // console.log(data[key]['_id']['timestamp']);
               const singleSensordata = {
+                mac: data[key]['_id']['sensorMac'],
                 timestamp: data[key]['_id']['timestamp'],
                 temp: data[key]['temperature'],
                 hum: data[key]['humidity']
@@ -144,14 +144,13 @@ export class FridgesComponent implements OnInit {
               fridgesensordata.push(singleSensordata);
             }
           }
-          console.log(fridgesensordata);
+          this.sensordata.push(JSON.stringify(fridgesensordata));
         });
       } catch (err) {
         alert("Fehler: Datenbank konnte nicht erreicht werden");
       }
     })
-    this.sensordata.push(fridgesensordata);
-    // console.log(this.sensordata);
+    console.log(this.sensordata);
   }
 
   deleteFridge(macAdresse) {

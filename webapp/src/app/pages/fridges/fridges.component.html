@@ -24,11 +24,11 @@
           </div>
           <div *ngFor="let item of fridgeNames" class="general">
             <div class="fridgeList-item">
-              <div [ngClass]="item['configured'] && item['ok']  ? 'configured' : 'unconfigured'">
+              <div [ngClass]="item['configured'] && item['tempOk'] && item['humOk'] ? 'configured' : 'unconfigured'">
                 {{item['name'] != "" ? item['name'] : item['mac'] + ": Kühlschrank wurde noch nicht definiert"}}
               </div>
               <div class="buttons">
-                <button class="fridgeButton" (click)="showData(fridgeNames.indexOf(item),item['mac'])">
+                <button class="fridgeButton" (click)="showData(fridgeNames.indexOf(item))">
                   {{!item['openData'] ? "Sensordaten" :
                   "Schließen" }} </button>
                 <button [ngClass]="item['configured'] || item['openConfig'] ? 'fridgeButton' : 'fridgeButton-red'"
@@ -38,8 +38,7 @@
               </div>
             </div>
             <div *ngIf="item['openData']" class="extra">
-              DATA
-              {{sensordata}}
+              {{sensordata[fridgeNames.indexOf(item)]}}
             </div>
             <div *ngIf="item['openConfig']" class="extra">
               <div class="inputs">
