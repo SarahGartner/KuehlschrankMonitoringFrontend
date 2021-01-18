@@ -19,7 +19,8 @@
       <div class="sidebar">
         <div class="fridgesList">
           <div class="alert" *ngIf="bot == false">
-            <p>Achtung! Du hast den <a href="https://web.telegram.org/#/im?p=@KuehlschrankMonitoringBot" target="_blank">Kühlmonitoring Telegram Bot</a> noch nicht abonniert!</p>
+            <p>Achtung! Du hast den <a href="https://web.telegram.org/#/im?p=@KuehlschrankMonitoringBot"
+                target="_blank">Kühlmonitoring Telegram Bot</a> noch nicht abonniert!</p>
             <p><a routerLink="/info">Hier</a> findest du eine genaue Erklärung dazu! </p>
           </div>
           <div *ngFor="let item of fridgeNames" class="general">
@@ -38,12 +39,24 @@
               </div>
             </div>
             <div *ngIf="item['openData']" class="extra">
-              <div *ngFor="let data of sensordata[fridgeNames.indexOf(item)]">
-                <!-- <div [ngClass]="item['minTemp'] < data['temp'] ? 'sensordataNormal' : 'sensordataAbnormal'"> -->
-                  {{data['timestamp']}}: {{data['temp']}}C° {{data['hum']}}%
-                <!-- </div> -->
+              <div><label for="von">von: </label>
+                <input type="date" id="{{fridgeNames.indexOf(item)}}.von"
+                  value="{{sensordata[fridgeNames.indexOf(item)] != undefined ? sensordata[fridgeNames.indexOf(item)][0]['day'] : '2021-01-01'}}"
+                  min="{{sensordata[fridgeNames.indexOf(item)] != undefined ? sensordata[fridgeNames.indexOf(item)][0]['day']: '2021-01-01'}}"
+                  max="{{sensordata[fridgeNames.indexOf(item)] != undefined ? sensordata[fridgeNames.indexOf(item)][this.sensordata[fridgeNames.indexOf(item)].length-1]['day']: '2021-12-31'}}">
               </div>
-              <!-- {{sensordata[fridgeNames.indexOf(item)]}} -->
+              <div>
+                <label for="bis">bis: </label>
+                <input type="date" id="{{fridgeNames.indexOf(item)}}.bis"
+                  value="{{sensordata[fridgeNames.indexOf(item)] != undefined ? sensordata[fridgeNames.indexOf(item)][this.sensordata[fridgeNames.indexOf(item)].length-1]['day']: '2021-12-31'}}"
+                  min="{{sensordata[fridgeNames.indexOf(item)] != undefined ? sensordata[fridgeNames.indexOf(item)][0]['day']: '2021-01-01'}}"
+                  max="{{sensordata[fridgeNames.indexOf(item)] != undefined ? sensordata[fridgeNames.indexOf(item)][this.sensordata[fridgeNames.indexOf(item)].length-1]['day']: '2021-12-31'}}">
+              </div>
+              <!-- <button (click)="filter(fridgeNames.indexOf(item))" class="fridgeButton">Filter anwenden</button> -->
+              <button (click)="filter(fridgeNames.indexOf(item))" class="fridgeButton">Filter anwenden</button>
+              <div *ngFor="let data of sensordataFilter[fridgeNames.indexOf(item)]">
+                {{data['timestamp']}}: {{data['temp']}}C° {{data['hum']}}%
+              </div>
             </div>
             <div *ngIf="item['openConfig']" class="extra">
               <div class="inputs">
@@ -59,7 +72,7 @@
                     id="{{fridgeNames.indexOf(item)}}.minHum"> </div>
                 <div> Maximal Luftfeuchtigkeit: <input type="number" value="{{item['maxHum']}}"
                     id="{{fridgeNames.indexOf(item)}}.maxHum"> </div>
-                    <button (click)="deleteFridge(item['mac'])" class="fridgeButton" >Kühlgerät löschen</button>
+                <button (click)="deleteFridge(item['mac'])" class="fridgeButton">Kühlgerät löschen</button>
               </div>
               <button (click)="item['openConfig'] = false;" class="fridgeButton-abbrechen"> Abbrechen </button>
               <button (click)="item['openConfig'] = false; fridgeUpdate(fridgeNames.indexOf(item))"

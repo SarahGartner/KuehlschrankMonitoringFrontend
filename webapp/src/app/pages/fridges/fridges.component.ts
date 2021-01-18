@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core'
 import { HttpClient } from '@angular/common/http';
 import { interval, timer, Subscription } from 'rxjs';
+import { keyframes } from '@angular/animations';
 
 @Component({
   selector: 'app-fridges',
@@ -14,6 +15,7 @@ export class FridgesComponent implements OnInit {
   // url = 'http://localhost:3000/';
   fridgeNames = [];
   sensordata = [];
+  sensordataFilter = [];
   singleData = [];
   user = "";
   subscription: Subscription;
@@ -27,7 +29,7 @@ export class FridgesComponent implements OnInit {
 
   ngOnInit() {
     const source = interval(20000);
-    this.subscription = source.subscribe(val => this.getData());
+    // this.subscription = source.subscribe(val => this.getData());
 
     var input = document.getElementById("selectUser");
     input.addEventListener("keyup", function (event) {
@@ -119,13 +121,26 @@ export class FridgesComponent implements OnInit {
   }
 
   showData(item) {
+    this.getData();
     this.fridgeNames[item].openData = !this.fridgeNames[item].openData;
     this.fridgeNames[item].openConfig = false;
-    this.getData();
+  }
+
+  filter(item) {
+    const von = (<HTMLInputElement>document.getElementById(item + ".von")).value + 'T00:00:00.000Z';
+    const bis = (<HTMLInputElement>document.getElementById(item + ".bis")).value + 'T23:59:59.000Z';
+    this.sensordataFilter[item] = [];
+    this.sensordata[item].forEach(e => {
+      if (e['timestampFull'] >= von && e['timestampFull'] <= bis) {
+        this.sensordataFilter[item].push(e);
+      }
+    });
+    console.log(this.sensordataFilter[item]);
   }
 
   getData() {
     this.sensordata = [];
+    this.sensordataFilter = [];
     this.fridgeNames.forEach(e => {
       try {
         const mac = { sensorMac: e.mac };
@@ -136,6 +151,8 @@ export class FridgesComponent implements OnInit {
               var time = (data[key]['_id']['timestamp']).substring(0, 10) + " " + (data[key]['_id']['timestamp']).substring(11, 19);
               const singleSensordata = {
                 timestamp: time,
+                day: (data[key]['_id']['timestamp']).substring(0, 10),
+                timestampFull: data[key]['_id']['timestamp'],
                 temp: data[key]['temperature']['$numberDecimal'],
                 hum: data[key]['humidity']['$numberDecimal']
               }
@@ -143,6 +160,7 @@ export class FridgesComponent implements OnInit {
             }
           }
           this.sensordata.push(JSON.parse(JSON.stringify(fridgesensordata)));
+          this.sensordataFilter.push(JSON.parse(JSON.stringify(fridgesensordata)));
         });
       } catch (err) {
         alert("Fehler: Datenbank konnte nicht erreicht werden");
