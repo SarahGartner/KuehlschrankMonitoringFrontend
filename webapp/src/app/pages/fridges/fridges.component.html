@@ -1,11 +1,4 @@
 <div class="centered-content">
-  <!-- <p>Eingeloggt als User: {{userId.userId}}</p> -->
-  <!-- <select id="selectUser" (change)="this.setUser()">
-  <option value="-"> User auswählen </option>
-  <option *ngFor="let user of users" [value]="user">
-    {{user}}
-  </option>
-</select> -->
   <div class="userLogin">
     <p *ngIf="user == ''">Gib deinen User-Id ein, um auf deine Kühlgeräte zugreifen zu können!</p>
     <input type="text" value="" id="selectUser">
@@ -39,29 +32,38 @@
               </div>
             </div>
             <div *ngIf="item['openData']" class="extra">
-              <div><label for="von">von: </label>
-                <input type="date" id="{{fridgeNames.indexOf(item)}}.von"
-                  value="{{sensordata[fridgeNames.indexOf(item)] != undefined ? sensordata[fridgeNames.indexOf(item)][0]['day'] : '2021-01-01'}}"
-                  min="{{sensordata[fridgeNames.indexOf(item)] != undefined ? sensordata[fridgeNames.indexOf(item)][0]['day']: '2021-01-01'}}"
-                  max="{{sensordata[fridgeNames.indexOf(item)] != undefined ? sensordata[fridgeNames.indexOf(item)][this.sensordata[fridgeNames.indexOf(item)].length-1]['day']: '2021-12-31'}}">
+              <div class="labels">
+                <div><label for="von">von: </label>
+                  <input type="date" id="{{fridgeNames.indexOf(item)}}.von"
+                    value="{{sensordata[fridgeNames.indexOf(item)] != undefined ? sensordata[fridgeNames.indexOf(item)][0]['day'] : '2021-01-01'}}"
+                    min="{{sensordata[fridgeNames.indexOf(item)] != undefined ? sensordata[fridgeNames.indexOf(item)][0]['day']: '2021-01-01'}}"
+                    max="{{sensordata[fridgeNames.indexOf(item)] != undefined ? sensordata[fridgeNames.indexOf(item)][this.sensordata[fridgeNames.indexOf(item)].length-1]['day']: '2021-12-31'}}">
+                </div>
+                <div>
+                  <label for="bis">bis: </label>
+                  <input type="date" id="{{fridgeNames.indexOf(item)}}.bis"
+                    value="{{sensordata[fridgeNames.indexOf(item)] != undefined ? sensordata[fridgeNames.indexOf(item)][this.sensordata[fridgeNames.indexOf(item)].length-1]['day']: '2021-12-31'}}"
+                    min="{{sensordata[fridgeNames.indexOf(item)] != undefined ? sensordata[fridgeNames.indexOf(item)][0]['day']: '2021-01-01'}}"
+                    max="{{sensordata[fridgeNames.indexOf(item)] != undefined ? sensordata[fridgeNames.indexOf(item)][this.sensordata[fridgeNames.indexOf(item)].length-1]['day']: '2021-12-31'}}">
+                </div>
               </div>
-              <div>
-                <label for="bis">bis: </label>
-                <input type="date" id="{{fridgeNames.indexOf(item)}}.bis"
-                  value="{{sensordata[fridgeNames.indexOf(item)] != undefined ? sensordata[fridgeNames.indexOf(item)][this.sensordata[fridgeNames.indexOf(item)].length-1]['day']: '2021-12-31'}}"
-                  min="{{sensordata[fridgeNames.indexOf(item)] != undefined ? sensordata[fridgeNames.indexOf(item)][0]['day']: '2021-01-01'}}"
-                  max="{{sensordata[fridgeNames.indexOf(item)] != undefined ? sensordata[fridgeNames.indexOf(item)][this.sensordata[fridgeNames.indexOf(item)].length-1]['day']: '2021-12-31'}}">
-              </div>
-              <!-- <button (click)="filter(fridgeNames.indexOf(item))" class="fridgeButton">Filter anwenden</button> -->
               <button (click)="filter(fridgeNames.indexOf(item))" class="fridgeButton">Filter anwenden</button>
-              <div *ngFor="let data of sensordataFilter[fridgeNames.indexOf(item)]">
-                {{data['timestamp']}}: {{data['temp']}}C° {{data['hum']}}%
-              </div>
+              <canvas class="chart" baseChart
+                [datasets]="[{data: tempArray[fridgeNames.indexOf(item)], label:'Temperatur'}]"
+                [labels]="timeArray[fridgeNames.indexOf(item)]" [options]="lineChartOptions" [colors]="lineChartColors"
+                [legend]="lineChartLegend" [chartType]="lineChartType" [plugins]="lineChartPlugins">
+              </canvas>
+              <canvas class="chart" baseChart
+                [datasets]="[{data: humArray[fridgeNames.indexOf(item)], label:'Luftfeuchtigkeit'}]"
+                [labels]="timeArray[fridgeNames.indexOf(item)]" [options]="lineChartOptions" [colors]="lineChartColors"
+                [legend]="lineChartLegend" [chartType]="lineChartType" [plugins]="lineChartPlugins">
+              </canvas>
             </div>
             <div *ngIf="item['openConfig']" class="extra">
               <div class="inputs">
                 <div> Mac-Adresse: {{item['mac']}} </div>
-                <div> Name: <input type="text" value="{{item['name']}}" id="{{fridgeNames.indexOf(item)}}.name"> </div>
+                <div> Name: <input type="text" value="{{item['name']}}" id="{{fridgeNames.indexOf(item)}}.name">
+                </div>
                 <div> Kühlgerät-Id: <input type="text" value="{{item['fridgeId']}}"
                     id="{{fridgeNames.indexOf(item)}}.fridgeId"> </div>
                 <div> Mindest Temperatur: <input type="number" value="{{item['minTemp']}}"

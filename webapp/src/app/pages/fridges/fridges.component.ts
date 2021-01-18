@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core'
 import { HttpClient } from '@angular/common/http';
 import { interval, timer, Subscription } from 'rxjs';
 import { keyframes } from '@angular/animations';
+import { ChartDataSets, ChartOptions } from 'chart.js';
+import { Color, Label } from 'ng2-charts';
 
 @Component({
   selector: 'app-fridges',
@@ -15,16 +17,33 @@ export class FridgesComponent implements OnInit {
   // url = 'http://localhost:3000/';
   fridgeNames = [];
   sensordata = [];
-  sensordataFilter = [];
-  singleData = [];
+  // sensordataFilter = [];
   user = "";
   subscription: Subscription;
   bot = false;
-
+  tempArray = [];
+  humArray = [];
+  timeArray = [];
 
   constructor(private http: HttpClient) {
 
   }
+
+  //Chart
+  lineChartOptions = {
+    responsive: true,
+  };
+
+  lineChartColors: Color[] = [
+    {
+      borderColor: 'black',
+      backgroundColor: 'rgb(115, 160, 243)',
+    },
+  ];
+
+  lineChartLegend = true;
+  lineChartPlugins = [];
+  lineChartType = 'line';
 
 
   ngOnInit() {
@@ -129,22 +148,33 @@ export class FridgesComponent implements OnInit {
   filter(item) {
     const von = (<HTMLInputElement>document.getElementById(item + ".von")).value + 'T00:00:00.000Z';
     const bis = (<HTMLInputElement>document.getElementById(item + ".bis")).value + 'T23:59:59.000Z';
-    this.sensordataFilter[item] = [];
+    // this.sensordataFilter[item] = [];
+    this.tempArray[item] = [];
+    this.humArray[item] = [];
+    this.timeArray[item] = [];
     this.sensordata[item].forEach(e => {
       if (e['timestampFull'] >= von && e['timestampFull'] <= bis) {
-        this.sensordataFilter[item].push(e);
+        // this.sensordataFilter[item].push(e);
+        this.tempArray[item].push(e['temp']);
+        this.humArray[item].push(e['hum']);
+        this.timeArray[item].push(e['timestamp']);
       }
     });
-    console.log(this.sensordataFilter[item]);
   }
 
   getData() {
+    this.tempArray = [];
+    this.humArray = [];
+    this.timeArray = [];
+    // this.sensordataFilter = [];
     this.sensordata = [];
-    this.sensordataFilter = [];
     this.fridgeNames.forEach(e => {
       try {
         const mac = { sensorMac: e.mac };
         this.http.post(this.url + 'sensordata/ByMac', mac).toPromise().then(data => {
+          var singleTemp = [];
+          var singleHum = [];
+          var singleTime = [];
           var fridgesensordata = [];
           for (let key in data) {
             if (data.hasOwnProperty(key)) {
@@ -157,10 +187,22 @@ export class FridgesComponent implements OnInit {
                 hum: data[key]['humidity']['$numberDecimal']
               }
               fridgesensordata.push(singleSensordata);
+              singleTemp.push(data[key]['temperature']['$numberDecimal']);
+              singleHum.push(data[key]['humidity']['$numberDecimal']);
+              singleTime.push(time);
             }
           }
+          this.tempArray.push(JSON.parse(JSON.stringify(singleTemp)));
+          this.humArray.push(JSON.parse(JSON.stringify(singleHum)));
+          this.timeArray.push(JSON.parse(JSON.stringify(singleTime)));
           this.sensordata.push(JSON.parse(JSON.stringify(fridgesensordata)));
-          this.sensordataFilter.push(JSON.parse(JSON.stringify(fridgesensordata)));
+          // this.sensordataFilter.push(JSON.parse(JSON.stringify(fridgesensordata)));
+          console.log(this.sensordata);
+
+          //Schrecklicher Quickfix :( Irgendwie wird zu oft auf sensordata gepusht
+          if(this.sensordata.length > this.fridgeNames.length){
+            this.getData();
+          }
         });
       } catch (err) {
         alert("Fehler: Datenbank konnte nicht erreicht werden");
