@@ -24,6 +24,12 @@
   margin: 10px 0;
 }
 
+.confButtons{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
 .sidebar{
   display: flex;
   flex-direction: column;

@@ -17,21 +17,52 @@ export class FridgesComponent implements OnInit {
   // url = 'http://localhost:3000/';
   fridgeNames = [];
   sensordata = [];
-  // sensordataFilter = [];
   user = "";
   subscription: Subscription;
   bot = false;
   tempArray = [];
   humArray = [];
   timeArray = [];
+  dayArray = [];
 
   constructor(private http: HttpClient) {
 
   }
 
   //Chart
-  lineChartOptions = {
+  lineChartOptionsHum = {
     responsive: true,
+    scales: {
+      yAxes: [{
+        display: true,
+        ticks: {
+          beginAtZero: true,
+          steps: 10,
+          stepValue: 5,
+          max: 100
+        }
+      }],
+      xAxes: [{
+        ticks: {
+          display: true,
+          autoSkip: true,
+          maxTicksLimit: 10
+        }
+      }]
+    }
+  };
+
+  lineChartOptionsTemp = {
+    responsive: true,
+    scales: {
+      xAxes: [{
+        ticks: {
+          display: true,
+          autoSkip: true,
+          maxTicksLimit: 10
+        }
+      }]
+    }
   };
 
   lineChartColors: Color[] = [
@@ -40,14 +71,13 @@ export class FridgesComponent implements OnInit {
       backgroundColor: 'rgb(115, 160, 243)',
     },
   ];
-
   lineChartLegend = true;
   lineChartPlugins = [];
   lineChartType = 'line';
 
 
   ngOnInit() {
-    const source = interval(20000);
+    // const source = interval(20000);
     // this.subscription = source.subscribe(val => this.getData());
 
     var input = document.getElementById("selectUser");
@@ -148,25 +178,27 @@ export class FridgesComponent implements OnInit {
   filter(item) {
     const von = (<HTMLInputElement>document.getElementById(item + ".von")).value + 'T00:00:00.000Z';
     const bis = (<HTMLInputElement>document.getElementById(item + ".bis")).value + 'T23:59:59.000Z';
-    // this.sensordataFilter[item] = [];
-    this.tempArray[item] = [];
-    this.humArray[item] = [];
-    this.timeArray[item] = [];
-    this.sensordata[item].forEach(e => {
-      if (e['timestampFull'] >= von && e['timestampFull'] <= bis) {
-        // this.sensordataFilter[item].push(e);
-        this.tempArray[item].push(e['temp']);
-        this.humArray[item].push(e['hum']);
-        this.timeArray[item].push(e['timestamp']);
-      }
-    });
+    if (von > bis) {
+      alert('Das "von"-Datum muss kleiner sein als "bis"!');
+    } else {
+      this.tempArray[item] = [];
+      this.humArray[item] = [];
+      this.timeArray[item] = [];
+      this.sensordata[item].forEach(e => {
+        if (e['timestampFull'] >= von && e['timestampFull'] <= bis) {
+          this.tempArray[item].push(e['temp']);
+          this.humArray[item].push(e['hum']);
+          this.timeArray[item].push(e['timestamp']);
+        }
+      });
+    }
   }
 
   getData() {
     this.tempArray = [];
     this.humArray = [];
     this.timeArray = [];
-    // this.sensordataFilter = [];
+    this.dayArray = [];
     this.sensordata = [];
     this.fridgeNames.forEach(e => {
       try {
@@ -175,6 +207,7 @@ export class FridgesComponent implements OnInit {
           var singleTemp = [];
           var singleHum = [];
           var singleTime = [];
+          var singleDay = [];
           var fridgesensordata = [];
           for (let key in data) {
             if (data.hasOwnProperty(key)) {
@@ -190,17 +223,23 @@ export class FridgesComponent implements OnInit {
               singleTemp.push(data[key]['temperature']['$numberDecimal']);
               singleHum.push(data[key]['humidity']['$numberDecimal']);
               singleTime.push(time);
+              singleDay.push(singleSensordata['day']);
             }
+          }
+          if (singleTime.length > 100) {
+            singleHum = singleHum.slice(singleHum.length - 101, singleHum.length - 1);
+            singleTemp = singleTemp.slice(singleTemp.length - 101, singleTemp.length - 1);
+            singleTime = singleTime.slice(singleTime.length - 101, singleTime.length - 1);
+            singleDay = singleDay.slice(singleDay.length - 101, singleDay.length - 1);
           }
           this.tempArray.push(JSON.parse(JSON.stringify(singleTemp)));
           this.humArray.push(JSON.parse(JSON.stringify(singleHum)));
           this.timeArray.push(JSON.parse(JSON.stringify(singleTime)));
+          this.dayArray.push(JSON.parse(JSON.stringify(singleDay)));
           this.sensordata.push(JSON.parse(JSON.stringify(fridgesensordata)));
-          // this.sensordataFilter.push(JSON.parse(JSON.stringify(fridgesensordata)));
-          console.log(this.sensordata);
 
-          //Schrecklicher Quickfix :( Irgendwie wird zu oft auf sensordata gepusht
-          if(this.sensordata.length > this.fridgeNames.length){
+          //Schrecklicher Quickfix :( Irgendwie wird zu oft auf sensordata gepusht :( bei einem Kühlgerät funkt super
+          if (this.sensordata.length > this.fridgeNames.length) {
             this.getData();
           }
         });
