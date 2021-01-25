@@ -24,6 +24,7 @@ export class FridgesComponent implements OnInit {
   humArray = [];
   timeArray = [];
   dayArray = [];
+  aktuelleTemp = [];
 
   constructor(private http: HttpClient) {
 
@@ -200,6 +201,7 @@ export class FridgesComponent implements OnInit {
     this.timeArray = [];
     this.dayArray = [];
     this.sensordata = [];
+    this.aktuelleTemp = [];
     this.fridgeNames.forEach(e => {
       try {
         const mac = { sensorMac: e.mac };
@@ -237,6 +239,8 @@ export class FridgesComponent implements OnInit {
           this.timeArray.push(JSON.parse(JSON.stringify(singleTime)));
           this.dayArray.push(JSON.parse(JSON.stringify(singleDay)));
           this.sensordata.push(JSON.parse(JSON.stringify(fridgesensordata)));
+          this.aktuelleTemp.push(JSON.parse(JSON.stringify(fridgesensordata[fridgesensordata.length - 1])));
+          // console.log(fridgesensordata[fridgesensordata.length - 1]);
 
           //Schrecklicher Quickfix :( Irgendwie wird zu oft auf sensordata gepusht :( bei einem Kühlgerät funkt super
           if (this.sensordata.length > this.fridgeNames.length) {

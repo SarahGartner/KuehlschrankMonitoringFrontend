@@ -32,22 +32,31 @@
               </div>
             </div>
             <div *ngIf="item['openData']" class="extra">
-              <div class="labels">
-                <div><label for="von">von: </label>
-                  <input type="date" id="{{fridgeNames.indexOf(item)}}.von"
-                    value="{{sensordata[fridgeNames.indexOf(item)] != undefined ? dayArray[fridgeNames.indexOf(item)][0] : '2021-01-01'}}"
-                    min="{{sensordata[fridgeNames.indexOf(item)] != undefined ? sensordata[fridgeNames.indexOf(item)][0]['day']: '2021-01-01'}}"
-                    max="{{sensordata[fridgeNames.indexOf(item)] != undefined ? sensordata[fridgeNames.indexOf(item)][this.sensordata[fridgeNames.indexOf(item)].length-1]['day']: '2021-12-31'}}">
+              <div class="extraDiv">
+                <div class="labels1">
+                  Aktuelle Temperatur: {{this.aktuelleTemp[fridgeNames.indexOf(item)]['temp']}} <br>
+                  Aktuelle Luftfeuchtigkeit: {{this.aktuelleTemp[fridgeNames.indexOf(item)]['hum']}} <br>
+                  <button class="fridgeButton" style="margin-top:10px; margin-left:0px">Einzelansicht</button>
                 </div>
-                <div>
-                  <label for="bis">bis: </label>
-                  <input type="date" id="{{fridgeNames.indexOf(item)}}.bis"
-                    value="{{sensordata[fridgeNames.indexOf(item)] != undefined ? dayArray[fridgeNames.indexOf(item)][dayArray[fridgeNames.indexOf(item)].length - 1]: '2021-12-31'}}"
-                    min="{{sensordata[fridgeNames.indexOf(item)] != undefined ? sensordata[fridgeNames.indexOf(item)][0]['day']: '2021-01-01'}}"
-                    max="{{sensordata[fridgeNames.indexOf(item)] != undefined ? sensordata[fridgeNames.indexOf(item)][this.sensordata[fridgeNames.indexOf(item)].length-1]['day']: '2021-12-31'}}">
+                <div class="labels2">
+                  <div>
+                    <label for="von">von: </label>
+                    <input type="date" id="{{fridgeNames.indexOf(item)}}.von"
+                      value="{{sensordata[fridgeNames.indexOf(item)] != undefined ? dayArray[fridgeNames.indexOf(item)][0] : '2021-01-01'}}"
+                      min="{{sensordata[fridgeNames.indexOf(item)] != undefined ? sensordata[fridgeNames.indexOf(item)][0]['day']: '2021-01-01'}}"
+                      max="{{sensordata[fridgeNames.indexOf(item)] != undefined ? sensordata[fridgeNames.indexOf(item)][this.sensordata[fridgeNames.indexOf(item)].length-1]['day']: '2021-12-31'}}">
+                  </div>
+                  <div>
+                    <label for="bis">bis: </label>
+                    <input type="date" id="{{fridgeNames.indexOf(item)}}.bis"
+                      value="{{sensordata[fridgeNames.indexOf(item)] != undefined ? dayArray[fridgeNames.indexOf(item)][dayArray[fridgeNames.indexOf(item)].length - 1]: '2021-12-31'}}"
+                      min="{{sensordata[fridgeNames.indexOf(item)] != undefined ? sensordata[fridgeNames.indexOf(item)][0]['day']: '2021-01-01'}}"
+                      max="{{sensordata[fridgeNames.indexOf(item)] != undefined ? sensordata[fridgeNames.indexOf(item)][this.sensordata[fridgeNames.indexOf(item)].length-1]['day']: '2021-12-31'}}">
+                  </div>
+                  <button (click)="filter(fridgeNames.indexOf(item))" style="margin-top:10px"
+                    class="fridgeButton">Filter anwenden</button>
                 </div>
               </div>
-              <button (click)="filter(fridgeNames.indexOf(item))" class="fridgeButton">Filter anwenden</button>
               <canvas class="chart" baseChart
                 [datasets]="[{data: tempArray[fridgeNames.indexOf(item)], label:'Temperatur', fill:'false'}]"
                 [labels]="timeArray[fridgeNames.indexOf(item)]" [options]="lineChartOptionsTemp"
@@ -78,7 +87,8 @@
                     id="{{fridgeNames.indexOf(item)}}.maxHum"> </div>
               </div>
               <div class="confButtons">
-                <button style="margin-left: 0px;" (click)="deleteFridge(item['mac'])" class="fridgeButton">Kühlgerät löschen</button>
+                <button style="margin-left: 0px;" (click)="deleteFridge(item['mac'])" class="fridgeButton">Kühlgerät
+                  löschen</button>
                 <div>
                   <button (click)="item['openConfig'] = false;" class="fridgeButton-abbrechen"> Abbrechen </button>
                   <button (click)="item['openConfig'] = false; fridgeUpdate(fridgeNames.indexOf(item))"
