@@ -5,7 +5,7 @@
   box-shadow: 0px 0px 10px grey;
   height: min-content;
   padding-bottom: 10px;
-  width: 40%;
+  width: 50%;
   margin: auto;
   margin-top: 30px;
   text-align: center;
@@ -53,4 +53,10 @@ button {
 
 #okButton{
   margin-left: 10px;
+}
+
+@media (max-width:600px) {
+  .container{
+    width: 100%;
+  }
 }
