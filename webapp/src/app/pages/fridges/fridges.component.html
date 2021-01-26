@@ -33,10 +33,10 @@
             </div>
             <div *ngIf="item['openData']" class="extra">
               <div class="extraDiv">
-                <div class="labels1">
+                <div *ngIf="this.aktuelleTemp[fridgeNames.indexOf(item)]!=undefined" class="labels1">
                   Aktuelle Temperatur: {{this.aktuelleTemp[fridgeNames.indexOf(item)]['temp']}}°C <br>
                   Aktuelle Luftfeuchtigkeit: {{this.aktuelleTemp[fridgeNames.indexOf(item)]['hum']}}% <br>
-                  <button class="fridgeButton" style="margin-top:10px; margin-left:0px">Einzelansicht</button>
+                  <a [routerLink]="['/einzelansicht',item['mac']]"><button class="fridgeButton" style="margin-top:10px; margin-left:0px">Einzelansicht</button></a>
                 </div>
                 <div class="labels2">
                   <div>

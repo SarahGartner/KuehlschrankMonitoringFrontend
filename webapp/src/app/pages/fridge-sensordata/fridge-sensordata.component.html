@@ -1,0 +1,36 @@
+<div class="container">
+  <div *ngIf="id!=null" class="topbar">
+    <h1 class="title"> Kühlgerät: {{id}} </h1>
+  </div>
+  <div *ngIf="id==null">
+    Gib die Mac-Adresse deines Kühlgerätes ein! <br>
+    <input type="text" id="mac">
+      <button (click)="setMac()" id="okButton" class="button"> Sensordaten anzeigen </button>
+  </div>
+  <div *ngIf="id!=null">
+    <div class="canvas">
+      <button class="button" (click)="pdf()">Pdf von Sensordaten erzeugen</button>
+      <!-- <button class="button" (click)="qr()">QR-Code erzeugen</button> -->
+      <canvas class="chart" baseChart [datasets]="[{data: temp, label:'Temperatur', fill:'false'}]" [labels]="time"
+        [options]="lineChartOptionsTemp" [colors]="lineChartColors" [legend]="lineChartLegend"
+        [chartType]="lineChartType" [plugins]="lineChartPlugins">
+      </canvas>
+      <canvas class="chart" baseChart [datasets]="[{data: hum, label:'Luftfeuchtigkeit', fill:'false'}]" [labels]="time"
+        [options]="lineChartOptionsHum" [colors]="lineChartColors" [legend]="lineChartLegend"
+        [chartType]="lineChartType" [plugins]="lineChartPlugins">
+      </canvas>
+    </div>
+    <table id="table">
+      <tr>
+        <th>Datum Uhrzeit</th>
+        <th>Temperatur</th>
+        <th>Luftfeuchtigkeit</th>
+      </tr>
+      <tr *ngFor="let item of sensordata">
+        <td>{{item['time']}}</td>
+        <td>{{item['temp']}}°C</td>
+        <td>{{item['hum']}}%</td>
+      </tr>
+    </table>
+  </div>
+</div>

@@ -78,8 +78,8 @@ export class FridgesComponent implements OnInit {
 
 
   ngOnInit() {
-    // const source = interval(20000);
-    // this.subscription = source.subscribe(val => this.getData());
+    const source = interval(10000);
+    this.subscription = source.subscribe(val => this.getData());
 
     var input = document.getElementById("selectUser");
     input.addEventListener("keyup", function (event) {
@@ -177,6 +177,14 @@ export class FridgesComponent implements OnInit {
   }
 
   filter(item) {
+    // var von = new Date().toString();
+    // var bis = new Date().toString();
+    // if((<HTMLInputElement>document.getElementById(item + ".von")).value != null){
+    //   von = (<HTMLInputElement>document.getElementById(item + ".von")).value + 'T00:00:00.000Z';
+    // }
+    // if((<HTMLInputElement>document.getElementById(item + ".bis")).value != null){
+    //   bis = (<HTMLInputElement>document.getElementById(item + ".bis")).value + 'T23:59:59.000Z';
+    // }
     const von = (<HTMLInputElement>document.getElementById(item + ".von")).value + 'T00:00:00.000Z';
     const bis = (<HTMLInputElement>document.getElementById(item + ".bis")).value + 'T23:59:59.000Z';
     if (von > bis) {
@@ -228,12 +236,12 @@ export class FridgesComponent implements OnInit {
               singleDay.push(singleSensordata['day']);
             }
           }
-          if (singleTime.length > 100) {
-            singleHum = singleHum.slice(singleHum.length - 101, singleHum.length - 1);
-            singleTemp = singleTemp.slice(singleTemp.length - 101, singleTemp.length - 1);
-            singleTime = singleTime.slice(singleTime.length - 101, singleTime.length - 1);
-            singleDay = singleDay.slice(singleDay.length - 101, singleDay.length - 1);
-          }
+          // if (singleTime.length > 100) {
+          //   singleHum = singleHum.slice(singleHum.length - 101, singleHum.length - 1);
+          //   singleTemp = singleTemp.slice(singleTemp.length - 101, singleTemp.length - 1);
+          //   singleTime = singleTime.slice(singleTime.length - 101, singleTime.length - 1);
+          //   singleDay = singleDay.slice(singleDay.length - 101, singleDay.length - 1);
+          // }
           this.tempArray.push(JSON.parse(JSON.stringify(singleTemp)));
           this.humArray.push(JSON.parse(JSON.stringify(singleHum)));
           this.timeArray.push(JSON.parse(JSON.stringify(singleTime)));
@@ -245,6 +253,9 @@ export class FridgesComponent implements OnInit {
           //Schrecklicher Quickfix :( Irgendwie wird zu oft auf sensordata gepusht :( bei einem Kühlgerät funkt super
           if (this.sensordata.length > this.fridgeNames.length) {
             this.getData();
+          }
+          for(var i = 0; i < this.sensordata.length-1; i++){
+            this.filter(i);
           }
         });
       } catch (err) {

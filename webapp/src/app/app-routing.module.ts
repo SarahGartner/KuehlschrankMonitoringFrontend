@@ -6,7 +6,8 @@ import { InformationComponent } from './pages/information/information.component'
 
 const routes: Routes = [
   { path: '', component: FridgesComponent },
-  { path: 'sensordata', component: FridgeSensordataComponent },
+  { path: 'einzelansicht/:id', component: FridgeSensordataComponent },
+  { path: 'einzelansicht', component: FridgeSensordataComponent },
   { path: 'info', component: InformationComponent }
 ];
 
