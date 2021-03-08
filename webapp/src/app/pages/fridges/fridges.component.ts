@@ -13,7 +13,7 @@ import { Color, Label } from 'ng2-charts';
 
 
 export class FridgesComponent implements OnInit {
-  url = `https://kuehlschrankmonitoringapi.azurewebsites.net/`;
+  url = `https://temperaturmonitoring-api.azurewebsites.net/`;
   // url = 'http://localhost:3000/';
   fridgeNames = [];
   sensordata = [];

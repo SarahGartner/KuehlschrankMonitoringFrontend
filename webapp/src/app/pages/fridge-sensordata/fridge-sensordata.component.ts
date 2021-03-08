@@ -13,7 +13,7 @@ import { Router } from '@angular/router';
 })
 
 export class FridgeSensordataComponent {
-  url = `https://kuehlschrankmonitoringapi.azurewebsites.net/`;
+  url = `https://temperaturmonitoring-api.azurewebsites.net/`;
   id = "";
   sensordata = [];
   temp = [];
